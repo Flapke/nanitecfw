@@ -6,7 +6,7 @@ Patches for the official FiiO Echo Nano **V1.7.0** firmware. This repository con
 
 ## What changes
 
-- Speeds up media-library refresh and writes refresh statistics to `CFWLOG.TXT`.
+- Speeds up media-library refresh.
 - Adds Shuffle All for the full song library.
 - Makes playback sequential when starting an album or a song inside an album. **Play All** from an artist uses shuffle; other lists retain their selected mode.
 - Skips unsupported tracks without repeatedly showing a popup.
