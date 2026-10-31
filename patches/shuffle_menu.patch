@@ -1,31 +1,28 @@
 # Shuffle, part 1: main-menu item (mod21, window 0).
 #
 # mod21 item table: 8-byte entries at 0x0300e6d8, string id at +6; 5 live
-# items plus an unused 6th entry at 0x0300e700. Icons: 20x16 1-bpp bitmaps via a
+# items. Icons: 20x16 1-bpp bitmaps via a
 # pointer table (literal at 0x0307a4d8, stock table 0x03004124 holds 5).
 
-# item 5: string 0x82 (was "Bluetooth Connecting...", no Bluetooth hardware)
-21:0300e704:00008200
+# Tetris, Shuffle All, Music Playback, Media Library, System Settings.
+21:0300e6d8:0100000000008600 0101010000008200 0103030000000000 0102020000005800 010404000000ec00
+21:03079b34:0b0b070b9c
 
-# item count 5 -> 6
-21:03079f70:0528                # right key: cmp r0, #5 (wrap to 0 above)
-21:03079f5e:0520                # left key on item 0: moveq r0, #5 (was strheq r2)
-21:03079f60:00bf                #   ... nop the beq so 5 is stored below
-21:0307a330:052a                # paint: draw item sel+1 if sel < 5
-21:0307a372:042a                # paint: draw item sel+2 if sel < 4
-21:0307a436:0528                # paint (icons): sel+1
-21:0307a450:0428                # paint (icons): sel+2
+# The old File Browser bitmap is unused; reuse its slot for Tetris.
+0:03072dff:00000e0e0e0000eeeeee000e0e0e00000000000000006e6e6e0060606000606060006e6e6e000000
 
-# dispatcher FUN_03079b1e tbb: case 5 -> Media Library code (0x03079b4a);
-# shuffle_route (shuffle_10_mod21_cave.S) then branches on the cursor
-21:03079b39:0b
+# Keep Music Playback as the startup/default playback-shortcut selection.
+21:0307941c:0220
+21:03079ce2:0221
 
-# icon table -> 6-entry copy in the cave (shuffle_10_mod21_cave.S)
+# icon table -> 5-entry copy (shuffle_10_mod21_cave.S)
 21:0307a4d8:04950703
+
+lang:86:*:u"Tetris"
 
 lang:82:zh-cn:u"随机播放"
 lang:82:zh-tw:u"隨機播放"
-lang:82:en:u"Shuffle"
+lang:82:en:u"Shuffle All"
 lang:82:ja:u"シャッフル"
 lang:82:ko:u"셔플"
 lang:82:fr:u"Aléatoire"

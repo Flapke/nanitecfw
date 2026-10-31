@@ -1,35 +1,99 @@
 # FiiO Echo Nano custom firmware
 
-Not affiliated with or endorsed by FiiO. FiiO and Echo Nano are trademarks of their owners.
-
-Patches for the official FiiO Echo Nano firmware **V1.7.0** that add media-library
+| **Tetris** is the leftmost main-menu entry, with tetromino gameplay, next-piece preview, score, line count, landing ghost and restart | 6.0.55: nav1 rotates right, nav2 hard-drops, Confirm rotates left; field raised 1 pixel |
+| **Shuffle All** replaces File Browser: shuffle play over the whole card in one press, whatever Folder Jumping Song is set to | 6.0.55: empty library displays “List Empty” and returns without opening the browser |
+| **Album playback** starts songs inside albums in Sequential Play; Artist album-level Play All uses Shuffle; other lists retain their mode and Folder Jumping Song | 6.0.55: distinguishes artist album-list from song-list level |
 features and make the library refresh much faster. This repository contains only
-the patches and the tools that apply them. It does **not** contain FiiO's
+### Customized menus (6.0.55)
 firmware: you download the official image yourself and build the custom image
-on your computer.
-
-> **Use at your own risk.** This is experimental, unofficial firmware. Flashing
-> any firmware can leave a device unusable. Read [Recovery](#recovery) before you
-> start. Nothing here changes the boot loader, and so far a stock image has always
-> been able to replace a custom one, but there is no guarantee.
+python3 tests/tetris_firmware_test.py out/nanitecfw-6.0.55-20261209/NANOV170.IMG
+chosen date in their output folder. For example, `gmake DATE=20261209` on macOS
+writes `out/nanitecfw-6.0.55-20261209/NANOV170.IMG`. Add `TETRIS_DIAGNOSTIC=10`
+  example, use `out/nanitecfw-6.0.55-20261209/NANOV170.IMG`. Copy the image,
+For the customized image built above with `DATE=20261209`, use
+`gmake recovery DATE=20261210` on macOS instead of the default recovery date.
+  32:0307cf14:u"6.0.55"                # module 32, UTF-16 string + NUL
 
 ## Features
 
 | Feature | Status |
 |---|---|
 | **Faster library refresh**: about 5× faster on a FLAC-heavy card (148 s → 28 s for 2,000 songs) | tested on device |
-| **Recent Albums** (Media Library): all albums, newest first, by the date the album's folder was created | tested on device |
-| **Shuffle** (main menu, 6th item): shuffle play over the whole card in one press, whatever Folder Jumping Song is set to | tested on device; the menu icon is new and not yet confirmed |
-| **Shuffle from the Media Library** works as in the stock firmware: an album shuffles within the album; Folder Navigation shuffles the current folder, or the whole card with Folder Jumping Song on | 6.0.6: fixed (6.0.1-6.0.5 shuffled the whole card from Folder Navigation even with Folder Jumping Song off); not yet tested on device |
+| **Tetris** is the leftmost main-menu entry, with tetromino gameplay, next-piece preview, score, line count, landing ghost and restart | 6.0.54: nav1 rotates right, nav2 hard-drops, Confirm rotates left; field raised 1 pixel |
+| **Shuffle All** replaces File Browser: shuffle play over the whole card in one press, whatever Folder Jumping Song is set to | 6.0.54: empty library displays “List Empty” and returns without opening the browser |
+| **Album playback** switches to Sequential Play when starting an album or a song within one; Artist Play All enables Shuffle; other lists retain their mode and Folder Jumping Song | 6.0.54: mode corrected from device menu order |
 | **Unsupported tracks** are skipped without a popup; playback stops after 10 failures in a row | tested on device |
-| **Album Artists / Artists**: the stock Artists list, which groups by album artist, is renamed "Album Artists"; a new "Artists" list groups by each track's own artist | tested on device |
+| **Artists** uses the stock album-artist grouping; the separate track-artist list is hidden | 6.0.7: menu layout checked; not yet tested on device |
 | `CFWLOG.TXT` in the card's root after each refresh: timings and counters | tested on device |
 | **Power saving**: lower CPU clocks during playback (decode core 144-288 MHz instead of 350-450 MHz for MP3, AAC, WMA, WAV, OGG, FLAC and ALAC), the CPU sleeps between events with the screen on, and the scroll wheel is polled every 1 ms instead of every 0.4 ms | new in 6.0.5; battery gain not measured |
 
 About shows the custom version (6.0.x) instead of the stock version.
 
-After flashing, run **Media Library → Media Library Refresh** once: Recent Albums
-and Artists need data the stock refresh doesn't write.
+### Customized menus (6.0.54)
+
+The main menu is **Tetris, Shuffle All, Music Playback, Media Library, System Settings**.
+Music Playback remains the startup selection.
+File Browser is removed here; **Folder Navigation** remains available inside
+Media Library. Music Settings is also removed from the main menu; double-click
+Confirm during playback to open the same settings screen.
+
+The Media Library menu is **Favorites, Artists, Folder Navigation, Media Library
+Refresh**, in that order. Artists groups by album artist, then album, then song.
+The separate All Songs, Albums, Genres, Recent Albums, Now Playing and track-artist
+entries are hidden. Shuffle All still uses the full All Songs index internally.
+The extra Recent Albums and track-artist indexes are still generated during refresh.
+
+After flashing, run **Media Library → Media Library Refresh** once.
+
+### Tetris (experimental)
+
+The normal build is playable. `TETRIS_DIAGNOSTIC=10` keeps normal gameplay and
+shows live/next type values above the field. Mode 9 dumps 21 indexed raw values:
+0-3 current type/orientation/x/y, 4-7 ghost type/orientation/x/y, 8-13 current
+piece offsets, 14 next type, and 15-20 preview offsets. Offset values are stored
+as value+2 (so 0..4 represents -2..2). This mode bypasses the unknown-type
+offset fallback solely for diagnosis. Mode 8 shows decimal live and next
+types, mode 7 uses one-hot markers, and mode 6 shows the fixed
+reference and true randomized piece without overriding the bag. Mode 5 overrides
+the current piece with Z; mode 4 compares a fixed Z with live `TState` state.
+Mode 3 compares a fixed Z with one hard-dropped
+and committed by the engine; mode 2 uses the engine's offset API; mode 1 builds
+the fixed border and solid Z / hollow-center T calibration screen. All modes
+replace gameplay; the default is `TETRIS_DIAGNOSTIC=0`.
+
+The OLED is 128-by-32 pixels. The board is rotated to use 60-by-30 pixels;
+turn the player 90 degrees clockwise for an upright board. The wheel moves the
+piece, navigation button 1 hard-drops, navigation button 2 rotates right, and
+Confirm rotates left. There is no manual soft-drop control. Long Confirm returns
+to the main menu. After game over, Confirm starts again. Normal controls outside the game
+are unchanged. Five-pixel-tall SCORE, LINES and LEVEL labels each have
+their five-pixel-tall value centered underneath. The unlabeled next piece is
+below the counters and above the board. The playfield is raised one pixel from
+the bottom edge of the upright display. Scores are not saved.
+
+Power uses the stock screen-off behavior. The game ends when screen-off is
+requested, restoring the normal menu callbacks before the display blanks.
+Waking the screen returns to the main menu; starting Tetris again begins a new
+game rather than resuming the discarded run.
+
+The game runs in separate temporary RAM, shared with the library-refresh payload
+at different times. It reads only its own code from firmware storage; it does
+not load an overlay over the music service. Playback memory preservation is
+tested in emulation, but actual concurrent playback, button timing, screen
+wake behavior and power-off still require device testing. Do not treat this
+build as device-validated. The previous working build remains in `out/custom/`.
+
+Game logic reuses [T-Engine](https://github.com/raywan/tengine), under the MIT
+license in `third_party/tengine/LICENSE`, with embedded adaptations documented
+in `third_party/tengine/README.nanite.md`.
+
+Tests (from the repository root, with Clang and Python's `unicorn` installed):
+
+```sh
+clang -std=c11 -O1 -g -fsanitize=address,undefined -Ithird_party/tengine tests/tetris_engine_test.c third_party/tengine/tengine.c -o out/engine-test
+out/engine-test
+python3 tests/tetris_firmware_test.py out/nanitecfw-6.0.54-20261208/NANOV170.IMG
+```
 
 ## Requirements
 
@@ -50,7 +114,7 @@ and Artists need data the stock refresh doesn't write.
 ```sh
 cp ~/Downloads/NANOV170.IMG .        # the official V1.7.0 image
 make check                           # confirms it is the expected stock file
-make                                 # writes out/NANOV170.IMG
+make                                 # writes out/nanitecfw-VERSION-DATE/NANOV170.IMG
 ```
 
 `DATE` is the build date stored in the image. The device boots whichever
@@ -61,10 +125,24 @@ close to stock as possible: a future official FiiO update with an older date
 than your custom build would be ignored. If you flash another custom build
 over this one, raise the date by a day each time (`make DATE=20260826`, ...).
 
+Builds automatically use the version from `patches/about_version.patch` and the
+chosen date in their output folder. For example, `gmake DATE=20261208` on macOS
+writes `out/nanitecfw-6.0.54-20261208/NANOV170.IMG`. Add `TETRIS_DIAGNOSTIC=10`
+for the gameplay trace. This date is suitable only
+if the installed firmware is older; increase it if needed. The build prints
+the exact output path after verification. `OUT=...` still overrides the path.
+
+Keep the image filename `NANOV170.IMG` when installing: acceptance of arbitrary
+filenames has not been verified. The versioned folder distinguishes builds on
+your computer without depending on a different device-side filename. Older
+files such as `out/NANOV170.IMG` are not updated by these versioned builds.
+
 ## Install
 
-1. Connect the Echo Nano by USB and copy `out/NANOV170.IMG` to the root of its
-   internal storage.
+1. Connect the Echo Nano by USB and copy `NANOV170.IMG` from the versioned folder
+  printed by the build to the root of its internal storage. For the current
+  example, use `out/nanitecfw-6.0.54-20261208/NANOV170.IMG`. Copy the image,
+  not the enclosing folder, and leave the filename unchanged.
 2. Eject it and restart the player; it installs the update while it boots.
 3. Check **About**: it should show `6.0.x`.
 4. Run **Media Library Refresh** once.
@@ -85,13 +163,12 @@ This writes `out/recovery/NANOV170.IMG`: FiiO's unmodified code with only the
 date changed, because the device would ignore the original file while a
 newer-dated custom build is installed.
 
+For the customized image built above with `DATE=20261208`, use
+`gmake recovery DATE=20261209` on macOS instead of the default recovery date.
+Always choose a recovery date newer than the last image you installed.
+
 ## Known issues
 
-- Back from the new **Artists** list lands on **Album Artists**, and Back from
-  **Recent Albums** lands on **Albums**.
-- Both artist lists use the same list type internally. If a song plays from one
-  of them and you pick the song at the same position in the other, the player
-  reopens Now Playing instead of starting the new song.
 - FLAC files tagged only with `ALBUM ARTIST` or `ALBUM_ARTIST` (instead of
   `ALBUMARTIST`) are grouped by track artist in Album Artists. This is stock
   behaviour.
@@ -109,9 +186,9 @@ date. Everything is applied at build time from three kinds of input:
 - `patches/*.patch`: data patches, written at a runtime address inside a
   firmware module, or as UI strings by ID and language:
   ```
-  32:0307cf14:u"6.0.6"                 # module 32, UTF-16 string + NUL
+  32:0307cf14:u"6.0.54"                # module 32, UTF-16 string + NUL
   22:030794f4:0a21                     # raw hex bytes
-  lang:87:en:u"Recent Albums"          # UI string 0x87, English
+  lang:82:en:u"Shuffle All"            # UI string 0x82, English
   ```
 - `patches/*.S`: small Thumb-2 code patches, each assembled at its target address
   (`@ patch MOD ADDR`; see `patches/examples/template.S` and `patches/fw.inc`).
