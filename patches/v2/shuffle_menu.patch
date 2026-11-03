@@ -1,0 +1,52 @@
+# Five visible main-menu rows. M3U remains in the Media Library submenu.
+# Tetris, Shuffle All, Music Playback, Media Library, System Settings.
+21:0300e5d0:0100000000008600 0101030000008200 0102020000000000 0103010000005800 010404000000ec00
+21:0307ad10:5f5f070b9c
+0:03004128:ff2d0703
+0:03004130:272e0703
+0:03072dff:00001818183860c08080c060381818185c3810000000181818180c060303060c181818183a1c0800
+0:03072e77:00000e0e0e0000eeeeee000e0e0e00000000000000006e6e6e0060606000606060006e6e6e000000
+
+lang:86:zh-cn:u"俄罗斯方块"
+lang:86:zh-tw:u"俄羅斯方塊"
+lang:86:en:u"Tetris"
+lang:86:ja:u"テトリス"
+lang:86:ko:u"테트리스"
+lang:86:fr:u"Tetris"
+lang:86:de:u"Tetris"
+lang:86:it:u"Tetris"
+lang:86:es:u"Tetris"
+lang:86:pt:u"Tetris"
+lang:86:ru:u"Тетрис"
+lang:86:sv:u"Tetris"
+lang:86:th:u"เตตริส"
+lang:86:pl:u"Tetris"
+lang:86:da:u"Tetris"
+lang:86:nl:u"Tetris"
+lang:86:el:u"Tetris"
+lang:86:cs:u"Tetris"
+lang:86:tr:u"Tetris"
+lang:86:he:u"טטריס"
+lang:86:ar:u"تتريس"
+
+lang:82:zh-cn:u"随机播放"
+lang:82:zh-tw:u"隨機播放"
+lang:82:en:u"Shuffle All"
+lang:82:ja:u"シャッフル"
+lang:82:ko:u"셔플"
+lang:82:fr:u"Aléatoire"
+lang:82:de:u"Zufall"
+lang:82:it:u"Casuale"
+lang:82:es:u"Aleatorio"
+lang:82:pt:u"Aleatório"
+lang:82:ru:u"Случайно"
+lang:82:sv:u"Blanda"
+lang:82:th:u"สุ่ม"
+lang:82:pl:u"Losowo"
+lang:82:da:u"Bland"
+lang:82:nl:u"Willekeurig"
+lang:82:el:u"Τυχαία"
+lang:82:cs:u"Náhodně"
+lang:82:tr:u"Karışık"
+lang:82:he:u"ערבוב"
+lang:82:ar:u"عشوائي"

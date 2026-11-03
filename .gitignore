@@ -4,5 +4,6 @@ out/
 *.IMG
 *.img
 __pycache__/
+.venv/
 .direnv/
 .DS_Store

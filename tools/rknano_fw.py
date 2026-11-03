@@ -46,6 +46,8 @@ import sys
 STOCK = {
     "54a45d233a23c3ce142d1da9c093cc40c46eba417aa91fe915ee867726f4a116":
         "FiiO Echo Nano V1.7.0 (NANOV170.IMG, build date 2026-08-24)",
+    "e60ddde7ceae9c83f95db7710f4633a31cf72295d4821128274718dec16ff993":
+        "FiiO Echo Nano V2.0.0 (NANOV200.IMG, build date 2026-10-29)",
 }
 
 

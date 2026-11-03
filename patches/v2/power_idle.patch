@@ -1,0 +1,9 @@
+# Sleep between interrupts with the display on unless timeout inhibition is set.
+0:0306a204:1f20
+0:0306a20c:08d0
+
+# Timer 0 wheel sampling: 400 us to 1000 us in every setup path.
+0:0306b364:4ff47a72
+1:0307b198:4ff47a72
+9:0307d684:4ff47a72
+33:03083d34:4ff47a72

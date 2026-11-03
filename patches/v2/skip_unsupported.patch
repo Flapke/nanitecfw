@@ -1,0 +1,4 @@
+# Skip undecodable tracks silently; stop after 10 consecutive failures.
+# V2 module 33 preserves the V1 instruction layout at these relative offsets.
+33:030840aa:00bf
+33:030840bc:0a2845d200bf00bf

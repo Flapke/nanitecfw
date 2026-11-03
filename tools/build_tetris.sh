@@ -3,10 +3,14 @@ set -euo pipefail
 out=$1
 firmware=${2:-NANOV170.IMG}
 diagnostic=${3:-0}
+v2_profile=${4:-0}
 mkdir -p "$out/tetris"
 flags=(-mthumb -mcpu=cortex-m3 -Os -std=gnu11 -ffreestanding -fno-builtin
        -ffunction-sections -fdata-sections -fno-strict-aliasing
        -Wall -Wextra -Wno-unused-parameter -Isrc -Ithird_party/tengine)
+if [[ "$v2_profile" == 1 ]]; then
+    flags+=(-DFW_V2)
+fi
 case "$diagnostic" in
     1) flags+=(-DTETRIS_DISPLAY_DIAGNOSTIC) ;;
     2) flags+=(-DTETRIS_ENGINE_DIAGNOSTIC) ;;

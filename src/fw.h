@@ -16,7 +16,11 @@ typedef unsigned long long u64;
 
 #define fw_lock        FW(0x0306a40e, void, void)         /* nestable, masks the FS-using IRQs */
 #define fw_unlock      FW(0x0306a466, void, void)
+#ifdef FW_V2
+#define fw_ticks       FW(0x0306a5ca, u32, void)          /* 10 ms system ticks */
+#else
 #define fw_ticks       FW(0x0306a532, u32, void)          /* 10 ms system ticks */
+#endif
 #define fw_wdt         FW(0x03065800, void, void)         /* watchdog kick */
 #define fw_load_module FW(0x0306b6bc, void, u32 id, u32 flags)
 #define fw_vsnprintf   FW(0x03071e48, int, char *buf, int size, const char *fmt, __builtin_va_list ap)

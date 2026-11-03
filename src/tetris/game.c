@@ -4,12 +4,23 @@
 #include "fw.h"
 #include "tengine.h"
 
+#ifdef FW_V2
+#define MENU ((u32 *)0x0300e5b4)
+#define get_key FW(0x030632da, u32, void)
+#define post FW(0x0306b0d8, void, u32)
+#define clear FW(0x0306b11a, void, u32)
+#define flag FW(0x0306b138, u32, u32)
+#define present FW(0x0307a1ec, void, int, int, int, int, const void *)
+#define SCREEN_OFF (*(volatile u8 *)0x0300c6bc)
+#else
 #define MENU ((u32 *)0x0300e6bc)
 #define get_key FW(0x03063242, u32, void)
 #define post FW(0x0306b040, void, u32)
 #define clear FW(0x0306b082, void, u32)
 #define flag FW(0x0306b0a0, u32, u32)
 #define present FW(0x03079010, void, int, int, int, int, const void *)
+#define SCREEN_OFF (*(volatile u8 *)0x0300d7d4)
+#endif
 
 static u32 saved_callbacks[3];
 static u32 last_update, last_paint, frame_time, random_state;
@@ -21,7 +32,7 @@ void tetris_exit(void);
 
 static int leave_for_screen_off(void)
 {
-    if (!flag(0x17) && !*(volatile u8 *)0x0300d7d4)
+    if (!flag(0x17) && !SCREEN_OFF)
         return 0;
     tetris_exit();
     return 1;
